@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio - TU INMOBILIARIA{% endblock %}
+
+{% block content %}
+{# Sección de bienvenida más compacta #}
+{# Ajustado: pt-4 (antes pt-6) y pb-3 (antes pb-4) #}
+
+
+{# Sección de propiedades destacadas #}
+{# Ajustado: pt-4 (antes pt-6) #}
+<section class="container mx-auto px-4 pt-4 pb-10">
+    <h1 class="text-center text-gray-800 text-3xl font-bold mb-6">Destacadas</h1>
+
+    {% if propiedades_destacadas %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {% for propiedad in propiedades_destacadas %}
+        <div class="col" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'100' }}">
+            <a href="{% url 'web_app:propiedad_detail' propiedad.pk %}"
+               class="block h-full shadow-md rounded-lg overflow-hidden transition-all duration-200 ease-in-out
+                      hover:scale-105 hover:shadow-xl hover:border-yellow-600 border border-gray-200">
+
+                {# Contenedor para la imagen y la estrella #}
+                <div class="relative">
+                    {% if propiedad.imagen_principal %}
+                        <img src="{{ propiedad.imagen_principal.url }}" class="w-full h-40 object-cover" alt="{{ propiedad.titulo }}">
+                    {% else %}
+                        <img src="{% static 'img/placeholder.png' %}" class="w-full h-40 object-cover bg-gray-200" alt="Sin imagen">
+                    {% endif %}
+                    {# Estrellita para propiedades destacadas #}
+                    {% if propiedad.is_destacada %}
+                    {# Sección para destacar las propiedades que esten ene sta area #}                        
+                    {% endif %}
+                </div>
+
+                <div class="p-4 flex flex-col h-full bg-gray-50 rounded-b-lg">
+                    <h3 class="text-base font-semibold mb-2 text-gray-900">{{ propiedad.titulo }}</h3>
+                    <p class="text-xs text-gray-600 mb-2">{{ propiedad.direccion }}, {{ propiedad.localidad }}</p>
+
+                    <div class="flex items-center mb-2">
+                        <span class="bg-gray-200 text-gray-800 text-xs px-2 py-1 rounded-full mr-2">{{ propiedad.get_tipo_display }}</span>
+                        <span class="bg-yellow-400 text-gray-900 text-xs px-2 py-1 rounded-full">{{ propiedad.get_tipo_operacion_display }}</span>
+                    </div>
+
+                    <p class="text-lg font-bold text-blue-600 mb-2">
+                        {% if propiedad.precio_usd %}${{ propiedad.precio_usd|floatformat:2 }} USD{% endif %}
+                        {% if propiedad.precio_pesos and propiedad.precio_usd %}<span class="text-gray-500"> / </span>{% endif %}
+                        {% if propiedad.precio_pesos %}${{ propiedad.precio_pesos|floatformat:2 }} ARS{% endif %}
+                    </p>
+
+                    <div class="flex justify-between text-gray-500 text-xs mt-auto">
+                        <span><i class="fas fa-bed mr-1"></i> {{ propiedad.dormitorios|default:"-" }} Dorm.</span>
+                        <span><i class="fas fa-bath mr-1"></i> {{ propiedad.banios|default:"-" }} Baños</span>
+                        <span><i class="fas fa-car mr-1"></i> {{ propiedad.cocheras|default:"-" }} Coch.</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center text-gray-500">No hay propiedades destacadas disponibles por el momento.</p>
+    {% endif %}
+</section>
+
+<hr class="border-t border-gray-300 my-8">
+
+<section class="container mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="col mb-4" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-home text-yellow-500 text-5xl mb-3"></i>
+            <h5 class="text-xl font-semibold text-gray-800">Casas & Departamentos</h5>
+            <p class="text-gray-600 text-base">Opciones únicas en zonas privilegiadas.</p>
+        </div>
+        <div class="col mb-4" data-aos="fade-up" data-aos-delay="200">
+            <i class="fas fa-building text-yellow-500 text-5xl mb-3"></i>
+            <h5 class="text-xl font-semibold text-gray-800">Oficinas & Locales</h5>
+            <p class="text-gray-600 text-base">Espacios comerciales que impulsan tu negocio.</p>
+        </div>
+        <div class="col mb-4" data-aos="fade-up" data-aos-delay="300">
+            <i class="fas fa-chart-line text-yellow-500 text-5xl mb-3"></i>
+            <h5 class="text-xl font-semibold text-gray-800">Inversiones Seguras</h5>
+            <p class="text-gray-600 text-base">Te ayudamos a elegir la mejor opción.</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Add any custom CSS here if Tailwind doesn't provide enough granularity */
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>
+{% endblock %}

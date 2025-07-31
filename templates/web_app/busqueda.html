@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto my-10 px-4">
+  <h1 class="text-center text-3xl font-bold mb-8">Buscar Propiedades</h1>
+
+  <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+    <form action="{% url 'web_app:busqueda' %}" method="GET" id="search-form">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div>
+          <label for="id_q" class="block text-sm font-semibold mb-1">Palabra Clave</label>
+          <input type="text" id="id_q" name="q" value="{{ query|default_if_none:'' }}" placeholder="Título, descripción, dirección, amenidades..."
+            class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <div>
+          <label for="id_tipo_propiedad" class="block text-sm font-semibold mb-1">Tipo Propiedad</label>
+          <select id="id_tipo_propiedad" name="tipo_propiedad" class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Cualquiera</option>
+            {% for value, label in tipo_propiedad_choices %}
+              <option value="{{ value }}" {% if value == selected_tipo_propiedad %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="id_tipo_operacion" class="block text-sm font-semibold mb-1">Operación</label>
+          <select id="id_tipo_operacion" name="tipo_operacion" class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Cualquiera</option>
+            {% for value, label in tipo_operacion_choices %}
+              <option value="{{ value }}" {% if value == selected_tipo_operacion %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label for="id_localidad" class="block text-sm font-semibold mb-1">Localidad</label>
+          <input type="text" id="id_localidad" name="localidad" value="{{ selected_localidad|default_if_none:'' }}" placeholder="Ej: Recoleta"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-4">
+        <div>
+          <label for="id_min_precio" class="block text-sm font-semibold mb-1">Precio Desde</label>
+          <input type="number" step="0.01" id="id_min_precio" name="min_precio" value="{{ selected_min_precio|default_if_none:'' }}"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <div>
+          <label for="id_max_precio" class="block text-sm font-semibold mb-1">Precio Hasta</label>
+          <input type="number" step="0.01" id="id_max_precio" name="max_precio" value="{{ selected_max_precio|default_if_none:'' }}"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <div class="col-span-2 md:col-span-2 flex items-end gap-2">
+            <button type="button" id="btn-currency-usd" class="currency-button py-2 px-4 rounded transition duration-200
+                {% if selected_currency == 'USD' %}
+                    bg-yellow-400 text-black border border-black
+                {% else %}
+                    bg-gray-200 text-gray-700 border border-gray-300
+                {% endif %}">
+                <i class="fa fa-dollar-sign mr-1"></i> USD
+            </button>
+            <input type="hidden" name="currency" id="hidden_currency" value="{{ selected_currency|default_if_none:'ARS' }}">
+        </div>
+        <div>
+          <label for="id_dormitorios" class="block text-sm font-semibold mb-1">Ambientes</label>
+          <input type="number" id="id_dormitorios" name="dormitorios" value="{{ selected_dormitorios|default_if_none:'' }}"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <div>
+          <label for="id_banios" class="block text-sm font-semibold mb-1">Baños</label>
+          <input type="number" id="id_banios" name="banios" value="{{ selected_banios|default_if_none:'' }}"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+        <div>
+          <label for="id_cocheras" class="block text-sm font-semibold mb-1">Cocheras</label>
+          <input type="number" id="id_cocheras" name="cocheras" value="{{ selected_cocheras|default_if_none:'' }}"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <div class="flex items-center mt-6">
+          <label class="flex items-center space-x-2 cursor-pointer text-base">
+            <input type="checkbox" id="id_is_destacada" name="is_destacada" {% if selected_is_destacada %}checked{% endif %}
+              class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" />
+            <span class="text-sm text-gray-700">Solo destacadas</span>
+          </label>
+        </div>
+        <div class="flex items-center mt-6">
+          <label class="flex items-center space-x-2 cursor-pointer text-base">
+            <input type="checkbox" id="id_acepta_mascotas" name="acepta_mascotas" {% if selected_acepta_mascotas %}checked{% endif %}
+              class="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500" />
+            <span class="text-sm text-gray-700">Acepta mascotas</span>
+          </label>
+        </div>
+        {% if selected_acepta_mascotas %}
+        <div>
+          <label for="id_tipo_mascota_permitida" class="block text-sm font-semibold mb-1">Tipo de Mascota</label>
+          <select id="id_tipo_mascota_permitida" name="tipo_mascota_permitida" class="w-full border border-gray-300 rounded px-3 py-2 text-base focus:ring-blue-500 focus:border-blue-500">
+            <option value="no_especificado">No especificado</option>
+            {% for value, label in tipo_mascota_choices %}
+              <option value="{{ value }}" {% if value == selected_tipo_mascota_permitida %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex gap-4 w-full md:w-auto mt-4 md:mt-0 justify-center">
+          <button type="submit" class="bg-blue-600 text-white py-3 px-6 rounded hover:bg-blue-700 transition duration-200 text-lg w-full sm:w-auto">Buscar</button>
+          <a href="{% url 'web_app:busqueda' %}" class="bg-gray-300 text-gray-800 py-3 px-6 rounded hover:bg-gray-400 transition duration-200 text-lg w-full sm:w-auto">Limpiar</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {# --- Applied Filters Section --- #}
+  {% if active_filters_display %}
+  <div class="bg-gray-100 p-4 rounded-lg mb-6">
+    <h2 class="text-lg font-semibold mb-3">Filtros Aplicados:</h2>
+    <div class="flex flex-wrap gap-2">
+      {% for filter_item in active_filters_display %}
+        <span class="inline-flex items-center bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
+          {{ filter_item.display_text }}
+          <a href="{% url 'web_app:busqueda' %}{% if filter_item.remove_url_params %}?{{ filter_item.remove_url_params }}{% endif %}"
+             class="ml-2 text-white hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50">
+            <i class="fa fa-times-circle"></i>
+          </a>
+        </span>
+      {% endfor %}
+      <a href="{% url 'web_app:busqueda' %}" class="ml-auto text-blue-600 hover:underline">Limpiar todos los filtros</a>
+    </div>
+  </div>
+  {% endif %}
+  {# --- End Applied Filters Section --- #}
+
+  {% if propiedades %}
+    <h2 class="text-xl font-semibold mb-6">Resultados ({{ propiedades.count }})</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for propiedad in propiedades %}
+      <a href="{% url 'web_app:propiedad_detail' propiedad.pk %}" class="block bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition duration-200">
+        {% if propiedad.imagen_principal %}
+          <img src="{{ propiedad.imagen_principal.url }}" alt="{{ propiedad.titulo }}" class="h-48 w-full object-cover" />
+        {% else %}
+          <img src="{% static 'img/placeholder.png' %}" alt="Imagen no disponible" class="h-48 w-full object-cover" />
+        {% endif %}
+        <div class="p-4 space-y-2">
+          <h3 class="text-lg font-semibold text-blue-700">{{ propiedad.titulo }}</h3>
+          <p class="text-sm text-gray-600">{{ propiedad.tipo_operacion|capfirst }} de {{ propiedad.get_tipo_display }}</p>
+          <p class="font-semibold text-green-700 text-lg">
+            {% if propiedad.precio_usd %}U$D {{ propiedad.precio_usd|floatformat:"2g" }}{% endif %}
+            {% if propiedad.precio_pesos %}<span class="text-blue-600">$ {{ propiedad.precio_pesos|floatformat:"2g" }}</span>{% endif %}
+          </p>
+          <p class="text-sm text-gray-500 flex items-center"><i class="fa fa-map-marker-alt mr-1"></i> {{ propiedad.direccion }}, {{ propiedad.localidad }}</p>
+          <p class="text-sm text-gray-500 flex gap-4">
+            {% if propiedad.dormitorios %}<span><i class="fa fa-bed"></i> {{ propiedad.dormitorios }}</span>{% endif %}
+            {% if propiedad.banios %}<span><i class="fa fa-bath"></i> {{ propiedad.banios }}</span>{% endif %}
+            {% if propiedad.metros_cuadrados_total %}<span><i class="fa fa-ruler-combined"></i> {{ propiedad.metros_cuadrados_total|floatformat:"0" }} m²</span>{% endif %}
+          </p>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 text-center mt-8 rounded">
+      <p>No se encontraron propiedades que coincidan con los criterios de búsqueda.</p>
+      <a href="{% url 'web_app:busqueda' %}" class="underline text-blue-600 hover:text-blue-800">Haz clic aquí para limpiar los filtros y buscar de nuevo.</a>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const usdButton = document.getElementById('btn-currency-usd');
+        const hiddenCurrencyInput = document.getElementById('hidden_currency');
+
+        // Initial state update on page load
+        function updateButtonState() {
+            if (hiddenCurrencyInput.value === 'USD') {
+                usdButton.classList.remove('bg-gray-200', 'text-gray-700', 'border-gray-300');
+                usdButton.classList.add('bg-yellow-400', 'text-black', 'border', 'border-black');
+            } else {
+                usdButton.classList.remove('bg-yellow-400', 'text-black', 'border', 'border-black');
+                usdButton.classList.add('bg-gray-200', 'text-gray-700', 'border', 'border-gray-300');
+            }
+        }
+
+        usdButton.addEventListener('click', function() {
+            if (hiddenCurrencyInput.value === 'USD') {
+                // If USD is currently selected, deselect it (switch to ARS)
+                hiddenCurrencyInput.value = 'ARS';
+            } else {
+                // If USD is not selected, select it
+                hiddenCurrencyInput.value = 'USD';
+            }
+            updateButtonState(); // Update button visual state
+        });
+
+        // Call once on load to set initial state correctly
+        updateButtonState();
+    });
+</script>
+{% endblock %}

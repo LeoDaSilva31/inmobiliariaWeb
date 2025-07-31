@@ -1,0 +1,6 @@
+boton de ver todas las propiedades:
+<div class="text-center pt-4 pb-3 text-gray-800" data-aos="fade-up">
+    <a href="{% url 'web_app:propiedad_list' %}" class="bg-gray-800 text-white px-6 py-3 rounded-lg text-xl hover:bg-gray-700 transition duration-300 mt-4 inline-block">
+        Ver Todas las Propiedades
+    </a>
+</div>

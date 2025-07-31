@@ -1,0 +1,51 @@
+/* custom.css */
+
+/* Importa tus fuentes si no lo haces vía CDN o Tailwind config */
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap'); */
+
+/* Aquí puedes añadir estilos personalizados que no sean fácilmente aplicables
+   directamente con las clases de Tailwind CSS en tu HTML, o para sobrescribir
+   comportamientos muy específicos.
+
+   Ejemplos:
+*/
+
+/* Para componentes muy específicos o estilos globales que Tailwind no cubre
+   directamente o si quieres usar @apply para agrupar clases:
+*/
+
+/* Ejemplo de cómo usar @apply (requiere PostCSS y Tailwind CLI/Webpack para compilar) */
+/*
+.btn-primary {
+    @apply bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-200;
+}
+*/
+
+/*
+   Si tienes alguna animación CSS personalizada o transiciones complejas:
+*/
+/*
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in-element {
+    animation: fadeIn 1s ease-in-out;
+}
+*/
+
+/*
+   Ajustes menores o overrides si son necesarios, pero intenta evitarlos si
+   puedes lograrlo con clases de utilidad en el HTML.
+*/
+
+/* Por ejemplo, si necesitas un scroll-behavior suave en todo el documento */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Considera que la mayoría de los estilos deben ir en tu HTML con las
+   clases de Tailwind. Este archivo es para casos excepcionales o para
+   definiciones globales muy específicas.
+*/
