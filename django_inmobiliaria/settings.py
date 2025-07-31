@@ -11,7 +11,7 @@ environ.Env.read_env()
 
 # Seguridad
 SECRET_KEY = env('SECRET_KEY')
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 # Aplicaciones instaladas
