@@ -15,7 +15,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os # Sigue siendo útil para os.path.join, aunque Path sea dominante
 from pathlib import Path # Para manejar rutas de forma moderna y orientada a objetos
 from dotenv import load_dotenv
-
+import environ
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,17 +34,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY: Clave secreta para la seguridad de Django.
 # ¡IMPORTANTE! NUNCA uses esta clave directamente en producción.
 # Debe ser una variable de entorno o cargada de un archivo externo.
-SECRET_KEY = 'django-insecure-bwn7!(#!(-kh_3$t*6b4yh)i2!k1sj!4+-jusi2d^b8y%soudw'
+env = environ.Env()
+environ.Env.read_env()
+SECRET_KEY = env('SECRET_KEY')
 
 # DEBUG: Activa el modo de depuración.
 # ¡IMPORTANTE! Debe ser False en producción para evitar fugas de información sensible
 # y mejorar la seguridad.
-DEBUG = True
+DEBUG = False
 
 # ALLOWED_HOSTS: Lista de host/nombres de dominio que pueden servir tu Django.
 # En desarrollo, con DEBUG=True, [] permite todas las conexiones.
 # En producción, debes listar los dominios de tu sitio web (ej: ['www.tuinmobiliaria.com', 'tuinmobiliaria.com']).
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 
 # Application definition
