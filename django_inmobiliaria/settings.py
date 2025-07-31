@@ -2,19 +2,15 @@ import os
 from pathlib import Path
 import environ
 
-# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Cargar variables de entorno
 env = environ.Env()
 environ.Env.read_env()
 
-# Seguridad
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
-# Aplicaciones instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,7 +22,6 @@ INSTALLED_APPS = [
     'web_app',
 ]
 
-# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -39,7 +34,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'django_inmobiliaria.urls'
 
-# Plantillas
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -59,7 +53,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_inmobiliaria.wsgi.application'
 
-# Base de datos (SQLite por ahora)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -67,7 +60,6 @@ DATABASES = {
     }
 }
 
-# Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -83,27 +75,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Configuración regional
 LANGUAGE_CODE = 'es-ar'
 TIME_ZONE = 'America/Argentina/Buenos_Aires'
 USE_I18N = True
 USE_TZ = True
 
-# Archivos estáticos
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # Recolectados por collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Archivos de medios (subidas)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Clave primaria por defecto
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Variables personalizadas
 FORMSUBMIT_EMAIL = env("FORMSUBMIT_EMAIL")
 FORMSUBMIT_NEXT = env("FORMSUBMIT_NEXT")
 
